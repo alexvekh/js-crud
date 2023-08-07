@@ -68,6 +68,7 @@ input {
   border-radius: 10px;
   box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
   overflow: hidden;
+  background: rgba(210, 234, 255, 0.7960784314);
   padding: 16px;
   display: flex;
   flex-direction: column;

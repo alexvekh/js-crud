@@ -104,9 +104,8 @@ class Product {
     }
   }
   static updateById = (id, data) => {
-    console.log('updateById id', id)
     const product = this.getById(Number(id))
-    console.log('updateById product', product)
+    //console.log('updateById product', product)
     if (product) {
       this.update(product, data)
       return true
@@ -124,10 +123,11 @@ class Product {
   //   }
   // }
   static update = (product, { id, name, price, description }) => {
-    product.id = id
+    product.id = Number(id)
     product.name = name
-    product.price = price
+    product.price = Number(price)
     product.description = description
+    product.createDate = new Date().toUTCString()
   }
   // static saveToLocalStorage() {
   //   const productsString = JSON.stringify(this.#list)
@@ -268,15 +268,10 @@ router.get('/product-list', function (req, res) {
 
 // ================================================================
 router.get('/product-edit', function (req, res) {
-  //console.log(Product.getList())
-
   const { id } = req.query
-  console.debug('id:', id)
 
-  // second time this product undefined and TypeError: Cannot read properties of undefined (reading 'id')
+  //
   let product = Product.getById(Number(id))
-
-  console.log('GET id - product:', id, product)
 
   // if (!product) {
   //   // Handle the case where the product is not found by redirecting to an error page or displaying an error message.
@@ -305,7 +300,7 @@ router.get('/product-edit', function (req, res) {
 // ================================================================
 router.post('/product-edit', function (req, res) {
   const { id, name, price, description } = req.body
-  //console.debug('req.body: ', id, name, price, description)
+  console.debug('req.body: ', id, name, price, description)
   let result = false
   const product = Product.getById(Number(id))
   //console.debug('ROUTER, PRODUCT By ID: ', product)
@@ -313,8 +308,8 @@ router.post('/product-edit', function (req, res) {
   // else if (getList.some((product) => product.id === id)) alert('Таке ID вже існує. Виберіть інше ID')
   // // && product !== this.product
   // else {
+
   result = Product.updateById(id, { id, name, price, description })
-  console.debug('DATA FOR product: ', name, price, id, description)
   //}
 
   res.render('alert', {
@@ -329,9 +324,7 @@ router.post('/product-edit', function (req, res) {
 router.get('/product-delete', function (req, res) {
   const { id } = req.query
   let productDeleted = false
-  //console.log(productDeleted)
-  //console.log('delete id', id)
-  //console.debug('1', id, result)
+
   productDeleted = Product.deleteById(Number(id))
 
   res.render('alert', {
