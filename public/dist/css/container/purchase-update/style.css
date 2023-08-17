@@ -127,9 +127,29 @@
   gap: 8px;
 }
 
+.card__line {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
 .cart__item {
   display: flex;
   justify-content: space-between;
+}
+
+.cart {
+  display: grid;
+  gap: 8px;
+}
+
+.hr {
+  color: #999999;
+  margin-bottom: 8px;
+}
+
+.heading__title {
+  color: rgb(0, 119, 255);
 }
 
 /*# sourceMappingURL=style.css.map */

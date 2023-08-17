@@ -3,52 +3,35 @@
 в якому міститься код, котрий буде віддаватися по шляху (PATH) - "/"
  }}
 <main class='main'>
-
   {{#with data}}
-    <form method="POST" action="/purchase-submit?id={{id}}" class="form-card">
-        {{> heading title="Ваше замовлення"}}
+    {{!-- <form method="POST" action="/purchase-submit?id={{id}}" class="form-card"> --}}
+       
+        <ul class="orders">
+           {{> heading title="Мої замовлення"}}
+          {{#each list}}
 
-        <ul class="cart">
-          {{#each cart}}
-            <li class="cart__item">
-              <span>{{text}}</span>
-              <span>{{price}} грн</span>
+           <a href="/purchase-details?id={{id}}" class="order-link">  
+            <li class="order">
+              <div class="order-id hr"> 
+                <div>ID:</div> <div>{{id}}</div>
+              </div>
+              <div class="order-item">
+                <div class="hr">Товари</div>
+                <div>{{productTitle}}</div>
+              </div>
+              <div class="order-item">
+                <div class="hr">Сума замовлення</div>
+                <div>{{totalPrice}} грн</div>
+              </div>              
+              <div class="order-item">
+                <div class="hr">Нараховані бонуси</div>
+                <div>{{bonus}} грн</div>
+              </div>
             </li>
+            </a>
           {{/each}}
         </ul>
-        {{>divider}}
-
-        {{> heading title="Оформлення замовлення"}}
-
-        {{> field label="Ім'я" name="firstname"}}
-
-        {{> field label="Прізвище" name="lastname"}}
-
-        {{> field label="Телефон" name="phone"}}
-
-        {{> field label="Пошта" name="email"}}
-
-        {{> field label="Коментар" name="comment"}}
-
-        {{> field label="Списати бонуси" name="bonus"}}
-
-        {{> field label="Промокод" name="promocode"}}
-
-        {{> divider}}
-
-        {{> field value=totalPrice name="totalPrice" disabled=true}}
-        {{> field value=productPrice name="productPrice" disabled=true}}
-        {{> field value=deliveryPrice name="deliveryPrice" disabled=true}}
-        {{> field value=amount name="amount" disabled=true}}
-
-        <strong class="form-cart__total" >Всього: {{totalPrice}} грн ({{bonus}} грн бонусів)</strong>
-
-        {{> button text="Оформити замовлення"}}
-      
-    </form>
-
   {{/with}}
-
 </main>
 
 {{! 

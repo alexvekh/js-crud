@@ -159,7 +159,7 @@ class Purchase {
   }
 
   static getById = (id) => {
-    return Purchase.#list.find((item = item.id === id))
+    return this.#list.find((purchase) => purchase.id === id)
   }
 
   static updateById = (id, data) => {
@@ -178,6 +178,36 @@ class Purchase {
     }
   }
 }
+// Добавимо пару покупок для данних
+Purchase.add(
+  {
+    firstname: 'John',
+    lastname: 'Doe',
+    phone: '1234567890',
+    email: 'john@example.com',
+    totalPrice: 2500,
+    productPrice: 400,
+    deliveryPrice: 100,
+    amount: 2,
+  },
+  Product.getById(1),
+)
+
+Purchase.add(
+  {
+    firstname: 'John',
+    lastname: 'Doe',
+    phone: '1234567890',
+    email: 'john@example.com',
+    totalPrice: 1500,
+    productPrice: 400,
+    deliveryPrice: 100,
+    amount: 1,
+  },
+  Product.getById(2),
+)
+
+console.log(Purchase.getList())
 
 class Promocode {
   static #list = []
@@ -447,15 +477,195 @@ router.post('/purchase-submit', function (req, res) {
 })
 // ================================================================
 router.get('/purchase-list', function (req, res) {
-  //const id = Number(req.query.id)
+  const orderList = Purchase.getList().map((purchase) => {
+    return {
+      id: purchase.id,
+      productTitle: purchase.product.title,
+      totalPrice: purchase.totalPrice,
+      bonus: purchase.bonus,
+    }
+  })
+  //console.log(orderList)
 
   res.render('purchase-list', {
     style: 'purchase-list',
     data: {
-      list: Product.getRandomList(id),
-      product: Product.getById(id),
+      list: orderList,
     },
   })
+})
+
+// ================================================================
+router.get('/purchase-details', function (req, res) {
+  const id = Number(req.query.id)
+
+  res.render('purchase-details', {
+    style: 'purchase-details',
+    data: {
+      purchase: Purchase.getById(id),
+    },
+  })
+})
+// ================================================================
+
+router.get('/purchase-update', function (req, res) {
+  const id = Number(req.query.id)
+  const purchaseItem = Purchase.getById(id)
+  console.log(
+    'purchaseItem from get',
+    purchaseItem,
+    purchaseItem.firstname,
+  )
+
+  // if (!purchaseItem) {
+  //   return res.render('alert', {
+  //     style: 'alert',
+  //     data: {
+  //       message: 'Помилка',
+  //       info: 'Заказ не знайдено',
+  //       link: '/purchase-list',
+  //     },
+  //   })
+  // }
+
+  res.render('purchase-update', {
+    style: 'purchase-update',
+
+    data: {
+      id: purchaseItem.id,
+      firstname: purchaseItem.firstname,
+      lastname: purchaseItem.lastname,
+      email: purchaseItem.email,
+      phone: purchaseItem.phone,
+    },
+  })
+
+  let { firstname, lastname, email, phone } = req.body
+
+  // if (!firstname || !lastname || !email || !phone) {
+  //   return res.render('alert', {
+  //     style: 'alert',
+  //     data: {
+  //       message: `Заповнить обов'язкові поля`,
+  //       info: 'Некоректні дані',
+  //       link: '/purchase-list',
+  //     },
+  //   })
+  // }
+
+  // ↙️ cюди вводимо назву файлу з сontainer
+  // res.render('alert', {
+  //   // вказуємо назву папки контейнера, в якій знаходяться наші стилі
+  //   style: 'alert',
+
+  //   data: {
+  //     message: 'Успішно',
+  //     info: 'Замовлення створено',
+  //     link: `/purchase-list`,
+  //   },
+  // })
+  // ↑↑ сюди вводимо JSON дані
+})
+// ================================================================
+
+router.post('/purchase-update', function (req, res) {
+  const id = Number(req.query.id)
+  const purchaseItem = Purchase.getById(id)
+  console.log(
+    'purchaseItem from POST',
+    purchaseItem,
+    purchaseItem.id,
+  )
+
+  if (!purchaseItem) {
+    return res.render('alert', {
+      style: 'alert',
+      data: {
+        message: 'Помилка',
+        info: 'Заказ не знайдено',
+        link: '/purchase-list',
+      },
+    })
+  }
+
+  res.render('purchase-update', {
+    style: 'purchase-update',
+
+    data: {
+      id,
+      firstname: purchaseItem.firstname,
+      lastname: purchaseItem.lastname,
+      email: purchaseItem.email,
+      phone: purchaseItem.phone,
+    },
+  })
+
+  // let { firstname, lastname, email, phone } = req.body
+  // console.log(firstname, lastname, email, phone)
+  // if (!firstname || !lastname || !email || !phone) {
+  //   return res.render('alert', {
+  //     style: 'alert',
+  //     data: {
+  //       message: `Заповнить обов'язкові поля`,
+  //       info: 'Некоректні дані',
+  //       link: '/purchase-list',
+  //     },
+  //   })
+  // } else {
+  //   Purchase.updateById(id)
+  // }
+
+  // ↙️ cюди вводимо назву файлу з сontainer
+  // res.render('alert', {
+  //   // вказуємо назву папки контейнера, в якій знаходяться наші стилі
+  //   style: 'alert',
+
+  //   data: {
+  //     message: 'Успішно',
+  //     info: 'Замовлення створено',
+  //     link: `/purchase-list`,
+  //   },
+  // })
+  // ↑↑ сюди вводимо JSON дані
+})
+
+// ===============================================================
+
+router.post('/purchase-update-submit', function (req, res) {
+  const id = Number(req.query.id)
+
+  let { firstname, lastname, phone, email } = req.body
+
+  if (!firstname || !lastname || !email || !phone) {
+    return res.render('alert', {
+      style: 'alert',
+      data: {
+        message: `Заповнить обов'язкові поля`,
+        info: 'Некоректні дані',
+        link: '/purchase-list',
+      },
+    })
+  } else {
+    Purchase.updateById(id, {
+      firstname,
+      lastname,
+      phone,
+      email,
+    })
+  }
+
+  // ↙️ cюди вводимо назву файлу з сontainer
+  res.render('alert', {
+    // вказуємо назву папки контейнера, в якій знаходяться наші стилі
+    style: 'alert',
+
+    data: {
+      message: 'Успішно',
+      info: 'Дані оновлені',
+      link: `/purchase-list`,
+    },
+  })
+  // ↑↑ сюди вводимо JSON дані
 })
 // ================================================================
 // Підключаємо роутер до бек-енду

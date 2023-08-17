@@ -27,10 +27,33 @@
   gap: s.space(2);
 }
 
+.card__line {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: s.space(2);
+}
+
 .cart__item {
   display: flex;
   justify-content: space-between;
 }
+
+.cart {
+  display: grid;
+  gap: s.space(2);
+}
+
+
+.hr {
+  color: s.color(middle-dark);
+  margin-bottom: s.space(2);
+}
+
+
+.heading__title {
+  color: s.color(primary);
+}
+
 
 
 
